@@ -1,0 +1,14 @@
+{
+  "name": "webcomics-reader_backend",
+  "version": "1.0.0",
+  "description": "A Webcomics Reader Backend for XKCD, QC & CommitStrip",
+  "main": "functions/hanlder.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "vandium": "^4.8.0"
+  }
+}
