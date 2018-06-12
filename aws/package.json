@@ -10,5 +10,8 @@
   "license": "",
   "dependencies": {
     "vandium": "^4.8.0"
+  },
+  "devDependencies": {
+    "serverless-plugin-optimize": "^3.1.1-rc.1"
   }
 }

@@ -4,34 +4,33 @@ const AWS = require("aws-sdk");
 const region = process.env.REGION;
 AWS.config.region = region;
 const vandium = require('vandium');
+const newStrip = require("../../functions/common/newStrip");
+const dbHelper = require("../helpers/dynamoDB");
 
 exports.httpHandler = vandium.api()
     .protection()
-    .HEAD( (event) => {
-        throw new Error( 'Flow Not Found' );
-    })
-    .GET( (event) => {
-        throw new Error( 'Flow Not Found' );
-    })
-    .POST( (event) => {
-        return handlePost(event);
-    })
-    .PUT( (event) => {
-        throw new Error( 'Flow Not Found' );
-    })
-    .PATCH( (event) => {
-        throw new Error( 'Flow Not Found' );
-    })
-    .DELETE( (event) => {
-        throw new Error( 'Flow Not Found' );
-    });
+    .POST({
+            body: {
+                title: vandium.types.string().required(),
+                url: vandium.types.string().required(),
+                content: vandium.types.string().required(),
+                image: vandium.types.string().min(20).required(),
+                published: vandium.types.string().required()
+            }
+        },
+        (event) => handlePost(event)
+    );
 // .onError( (err) => {
 //     if( err.message.indexOf( 'Not Found' ) > -1 ) err.statusCode = 404;
 //     return err;
 // });
 
-
-function handlePost(event) {
-    console.log("Event: ", event);
-    return {  message: event }
+async function handlePost(event) {
+    let comicName = event.pathParameters.comicName;
+    let strip = event.body;
+    let parsedStrip = newStrip.parseNewStrip(strip, comicName);
+    console.log("Parsed Strip: ", parsedStrip);
+    let dbPostResult = await dbHelper.postNewStrip(parsedStrip);
+    console.log("DB Post Result: ", dbPostResult);
+    return "Done";
 }

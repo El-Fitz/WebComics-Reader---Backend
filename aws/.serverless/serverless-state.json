@@ -11,8 +11,22 @@
       "name": "aws",
       "runtime": "nodejs8.10",
       "environment": {
-        "REGION": "eu-west-1"
+        "REGION": "eu-west-1",
+        "DYNAMODB_TABLE": "ComicStrips"
       },
+      "iamRoleStatements": [
+        {
+          "Effect": "Allow",
+          "Action": [
+            "dynamodb:DescribeTable",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem"
+          ],
+          "Resource": "arn:aws:dynamodb:eu-west-1:430891671017:table/ComicStrips"
+        }
+      ],
       "versionFunctions": true,
       "remoteFunctionData": null,
       "compiledCloudFormationTemplate": {
@@ -26,6 +40,12 @@
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
               "LogGroupName": "/aws/lambda/WebComicsReader-dev-newStrip"
+            }
+          },
+          "GetStripsLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/WebComicsReader-dev-getStrips"
             }
           },
           "IamRoleLambdaExecution": {
@@ -70,6 +90,9 @@
                         "Resource": [
                           {
                             "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/WebComicsReader-dev-newStrip:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/WebComicsReader-dev-getStrips:*"
                           }
                         ]
                       },
@@ -81,8 +104,22 @@
                         "Resource": [
                           {
                             "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/WebComicsReader-dev-newStrip:*:*"
+                          },
+                          {
+                            "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/WebComicsReader-dev-getStrips:*:*"
                           }
                         ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "dynamodb:DescribeTable",
+                          "dynamodb:Query",
+                          "dynamodb:Scan",
+                          "dynamodb:GetItem",
+                          "dynamodb:PutItem"
+                        ],
+                        "Resource": "arn:aws:dynamodb:eu-west-1:430891671017:table/ComicStrips"
                       }
                     ]
                   }
@@ -109,10 +146,10 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/WebComicsReader/dev/1527580391812-2018-05-29T07:53:11.812Z/newStrip.zip"
+                "S3Key": "serverless/WebComicsReader/dev/1528833082450-2018-06-12T19:51:22.450Z/newStrip.zip"
               },
               "FunctionName": "WebComicsReader-dev-newStrip",
-              "Handler": "functions/newStrip.httpHandler",
+              "Handler": "_optimize/WebComicsReader-dev-newStrip/functions/newStrip.httpHandler",
               "MemorySize": 1024,
               "Role": {
                 "Fn::GetAtt": [
@@ -124,7 +161,8 @@
               "Timeout": 6,
               "Environment": {
                 "Variables": {
-                  "REGION": "eu-west-1"
+                  "REGION": "eu-west-1",
+                  "DYNAMODB_TABLE": "ComicStrips"
                 }
               }
             },
@@ -133,14 +171,56 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "NewStripLambdaVersionwfGunGlRl6dJkx7eVVgv2Jodqqw7CM5epDTVfpPa0c": {
+          "NewStripLambdaVersionFzyImihEklEyYNLeAWxV0E11yFJb4hXTZT60je11wyI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "NewStripLambdaFunction"
               },
-              "CodeSha256": "wfGunGlRl6dJkx7eVV/gv2Jodqqw7CM5epDTVfpPa0c="
+              "CodeSha256": "FzyImihEklEyYNLeAWxV0E11yFJb4hXTZT60je11wyI="
+            }
+          },
+          "GetStripsLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/WebComicsReader/dev/1528833082450-2018-06-12T19:51:22.450Z/getStrips.zip"
+              },
+              "FunctionName": "WebComicsReader-dev-getStrips",
+              "Handler": "_optimize/WebComicsReader-dev-getStrips/functions/getStrips.httpHandler",
+              "MemorySize": 1024,
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              },
+              "Runtime": "nodejs8.10",
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "REGION": "eu-west-1",
+                  "DYNAMODB_TABLE": "ComicStrips"
+                }
+              }
+            },
+            "DependsOn": [
+              "GetStripsLogGroup",
+              "IamRoleLambdaExecution"
+            ]
+          },
+          "GetStripsLambdaVersionN7G0eBGMzGeU8Z7vJOFXAdThkv7FmQJJ6AbtvvME": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetStripsLambdaFunction"
+              },
+              "CodeSha256": "+N7G/0eB+GMzGeU8Z7vJOFXAdThkv7FmQJJ6AbtvvME="
             }
           },
           "ApiGatewayRestApi": {
@@ -202,7 +282,45 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1527580391819": {
+          "ApiGatewayMethodComicnameVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceComicnameVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "GetStripsLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1528833082460": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -211,7 +329,8 @@
               "StageName": "dev"
             },
             "DependsOn": [
-              "ApiGatewayMethodComicnameVarPost"
+              "ApiGatewayMethodComicnameVarPost",
+              "ApiGatewayMethodComicnameVarGet"
             ]
           },
           "NewStripLambdaPermissionApiGateway": {
@@ -246,6 +365,70 @@
                 ]
               }
             }
+          },
+          "GetStripsLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetStripsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "ComicsStripsDynamoDbTable": {
+            "Type": "AWS::DynamoDB::Table",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "AttributeDefinitions": [
+                {
+                  "AttributeName": "comicName",
+                  "AttributeType": "S"
+                },
+                {
+                  "AttributeName": "id",
+                  "AttributeType": "S"
+                }
+              ],
+              "KeySchema": [
+                {
+                  "AttributeName": "comicName",
+                  "KeyType": "HASH"
+                },
+                {
+                  "AttributeName": "id",
+                  "KeyType": "RANGE"
+                }
+              ],
+              "ProvisionedThroughput": {
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1
+              },
+              "TableName": "ComicStrips"
+            }
           }
         },
         "Outputs": {
@@ -257,7 +440,13 @@
           "NewStripLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "NewStripLambdaVersionwfGunGlRl6dJkx7eVVgv2Jodqqw7CM5epDTVfpPa0c"
+              "Ref": "NewStripLambdaVersionFzyImihEklEyYNLeAWxV0E11yFJb4hXTZT60je11wyI"
+            }
+          },
+          "GetStripsLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetStripsLambdaVersionN7G0eBGMzGeU8Z7vJOFXAdThkv7FmQJJ6AbtvvME"
             }
           },
           "ServiceEndpoint": {
@@ -295,9 +484,12 @@
       },
       "vpc": {}
     },
+    "plugins": [
+      "serverless-plugin-optimize"
+    ],
     "functions": {
       "newStrip": {
-        "handler": "functions/newStrip.httpHandler",
+        "handler": "_optimize/WebComicsReader-dev-newStrip/functions/newStrip.httpHandler",
         "events": [
           {
             "http": {
@@ -308,15 +500,81 @@
           }
         ],
         "name": "WebComicsReader-dev-newStrip",
-        "package": {},
+        "package": {
+          "exclude": [
+            "**"
+          ],
+          "include": [
+            "_optimize/WebComicsReader-dev-newStrip/**"
+          ]
+        },
         "artifact": "/Users/elfitz/Documents/Work/Parsifal/Apps/WebComics Reader/WebComics Reader - Backend/aws/.serverless/newStrip.zip",
         "vpc": {}
+      },
+      "getStrips": {
+        "handler": "_optimize/WebComicsReader-dev-getStrips/functions/getStrips.httpHandler",
+        "events": [
+          {
+            "http": {
+              "path": "{comicName}",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "WebComicsReader-dev-getStrips",
+        "package": {
+          "exclude": [
+            "**"
+          ],
+          "include": [
+            "_optimize/WebComicsReader-dev-getStrips/**"
+          ]
+        },
+        "artifact": "/Users/elfitz/Documents/Work/Parsifal/Apps/WebComics Reader/WebComics Reader - Backend/aws/.serverless/getStrips.zip",
+        "vpc": {}
       }
+    },
+    "resources": {
+      "Resources": {
+        "ComicsStripsDynamoDbTable": {
+          "Type": "AWS::DynamoDB::Table",
+          "DeletionPolicy": "Retain",
+          "Properties": {
+            "AttributeDefinitions": [
+              {
+                "AttributeName": "comicName",
+                "AttributeType": "S"
+              },
+              {
+                "AttributeName": "id",
+                "AttributeType": "S"
+              }
+            ],
+            "KeySchema": [
+              {
+                "AttributeName": "comicName",
+                "KeyType": "HASH"
+              },
+              {
+                "AttributeName": "id",
+                "KeyType": "RANGE"
+              }
+            ],
+            "ProvisionedThroughput": {
+              "ReadCapacityUnits": 1,
+              "WriteCapacityUnits": 1
+            },
+            "TableName": "ComicStrips"
+          }
+        }
+      },
+      "Outputs": {}
     }
   },
   "package": {
     "individually": true,
-    "artifactDirectoryName": "serverless/WebComicsReader/dev/1527580391812-2018-05-29T07:53:11.812Z",
+    "artifactDirectoryName": "serverless/WebComicsReader/dev/1528833082450-2018-06-12T19:51:22.450Z",
     "artifact": ""
   }
 }
