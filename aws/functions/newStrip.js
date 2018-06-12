@@ -4,7 +4,7 @@ const AWS = require("aws-sdk");
 const region = process.env.REGION;
 AWS.config.region = region;
 const vandium = require('vandium');
-const newStrip = require("../../functions/common/newStrip");
+const newStrip = require("../../functions/newStrip");
 const dbHelper = require("../helpers/dynamoDB");
 
 exports.httpHandler = vandium.api()
