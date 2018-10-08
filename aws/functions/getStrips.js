@@ -13,5 +13,6 @@ exports.httpHandler = vandium.api()
 async function handleGet(event) {
     let comicName = event.pathParameters.comicName;
     let results = await dbHelper.getStripsForComic(comicName);
+    console.log("Results: ", results);
     return results.Items.reverse();
 }

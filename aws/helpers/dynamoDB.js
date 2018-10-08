@@ -33,3 +33,23 @@ exports.getStripsForComic = async (comicName) => {
         })
     });
 }
+
+exports.getLastImageForComic = async (comicName) => {
+    const params = {
+        TableName: "ComicStrips",
+        KeyConditionExpression: "comicName = :name",
+        ExpressionAttributeValues: {
+            ":name": comicName
+        },
+        Limit: 1,
+        ScanIndexForward: false
+    };
+    return new Promise((resolve, reject) => {
+        dynamodDb.query(params, (error, data) => {
+            console.log("Error: ", error);
+            console.log("Result: ", data);
+            if (error) return reject(error);
+            else return resolve(data);
+        })
+    });
+}

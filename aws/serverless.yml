@@ -41,6 +41,7 @@ package:
 
 plugins:
   - serverless-plugin-optimize
+  - serverless-domain-manager
 
 functions:
   newStrip:
@@ -55,25 +56,39 @@ functions:
       - http:
           path: /{comicName}
           method: get
+  getLatestImageForComics:
+    handler: functions/getLastImageForComics.httpHandler
+    events:
+      - http:
+          path: latestImages
+          method: get
+
+custom:
+  customDomain:
+    certificateName: 'comics.parsiweb.fr'
+    domainName: comics.parsiweb.fr
+    basePath: ${self:provider.stage}
+    stage: ${self:provider.stage}
+    createRoute53Record: true
 
 # you can add CloudFormation resource templates here
-resources:
-  Resources:
-    ComicsStripsDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: comicName
-            AttributeType: S
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: comicName
-            KeyType: HASH
-          - AttributeName: id
-            KeyType: RANGE
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        TableName: ${self:provider.environment.DYNAMODB_TABLE}
+# resources:
+#   Resources:
+#     ComicsStripsDynamoDbTable:
+#       Type: 'AWS::DynamoDB::Table'
+#       DeletionPolicy: Retain
+#       Properties:
+#         AttributeDefinitions:
+#           - AttributeName: comicName
+#             AttributeType: S
+#           - AttributeName: id
+#             AttributeType: S
+#         KeySchema:
+#           - AttributeName: comicName
+#             KeyType: HASH
+#           - AttributeName: id
+#             KeyType: RANGE
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
+#         TableName: ${self:provider.environment.DYNAMODB_TABLE}

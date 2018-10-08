@@ -1,8 +1,7 @@
-const comics = require("../../models/comics");
 const xkcd = require("../comicSpecific/xkcd");
 const qc = require("../comicSpecific/questionnableContent");
 
-exports.parseNewStrip = (strip, comicName) => {
+exports.parseNewStrip = (comicName, strip) => {
     switch (comicName) {
         case "XKCD":
             return xkcd.parse(comicName, strip);

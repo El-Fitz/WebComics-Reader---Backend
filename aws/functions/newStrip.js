@@ -26,11 +26,17 @@ exports.httpHandler = vandium.api()
 // });
 
 async function handlePost(event) {
-    let comicName = event.pathParameters.comicName;
-    let strip = event.body;
-    let parsedStrip = newStrip.parseNewStrip(strip, comicName);
-    console.log("Parsed Strip: ", parsedStrip);
-    let dbPostResult = await dbHelper.postNewStrip(parsedStrip);
-    console.log("DB Post Result: ", dbPostResult);
-    return "Done";
-}
+    try {
+        let comicName = event.pathParameters.comicName;
+        let strip = event.body;
+        let parsedStrip = newStrip(stirp, comicName);
+        console.log("Parsed Strip: ", parsedStrip);
+        let dbPostResult = await dbHelper.postNewStrip(parsedStrip);
+        console.log("DB Post Result: ", dbPostResult);
+        return "Done";
+    } catch (error) {
+        console.log("Event: ", event);
+        console.log("Error: ", error);
+        return "Failed"
+    }
+};
