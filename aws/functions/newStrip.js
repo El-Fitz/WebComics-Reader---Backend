@@ -4,7 +4,7 @@ const AWS = require("aws-sdk");
 const region = process.env.REGION;
 AWS.config.region = region;
 const vandium = require('vandium');
-const newStrip = require("../../functions/newStrip");
+const newStrip = require("webcomics-reader-webservices").newStrip;
 const dbHelper = require("../helpers/dynamoDB");
 
 exports.httpHandler = vandium.api()
@@ -19,11 +19,11 @@ exports.httpHandler = vandium.api()
             }
         },
         (event) => handlePost(event)
-    );
-// .onError( (err) => {
-//     if( err.message.indexOf( 'Not Found' ) > -1 ) err.statusCode = 404;
-//     return err;
-// });
+    )
+    .onError( (err) => {
+        console.log("Error: " + err);
+        return err
+    });
 
 async function handlePost(event) {
     try {

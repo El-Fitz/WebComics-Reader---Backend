@@ -1,0 +1,7 @@
+{
+	"LineCount.includes": [
+		"core/src/**/*",
+		"aws/functions/**/*",
+		"aws/helpers/**/*",
+	  ]
+}

@@ -35,3 +35,9 @@ jspm_packages
 .serverless
 aws/.serverless
 .idea
+
+# Typescript
+core/lib
+
+# Linecout
+out
