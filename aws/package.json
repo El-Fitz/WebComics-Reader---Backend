@@ -4,16 +4,19 @@
   "description": "A Webcomics Reader Backend for XKCD, QC & CommitStrip",
   "main": "functions/hanlder.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "author": "",
   "license": "",
   "dependencies": {
-    "vandium": "^4.8.0",
-    "webcomics-reader-webservices": "file:../core/lib"
+    "vandium": "^4.8.0"
+  },
+  "jest": {
+    "testURL": "http://localhost/"
   },
   "devDependencies": {
-    "serverless-plugin-optimize": "^3.1.1-rc.1",
-    "serverless-domain-manager": "^2.6.5"
+    "serverless-domain-manager": "^2.6.5",
+    "serverless-jest-plugin": "^0.1.6",
+    "serverless-plugin-optimize": "^3.1.1-rc.1"
   }
 }

@@ -3,9 +3,9 @@
 const AWS = require("aws-sdk");
 const region = process.env.REGION;
 AWS.config.region = region;
-const vandium = require('vandium');
-const newStrip = require("webcomics-reader-webservices").newStrip;
-const dbHelper = require("../helpers/dynamoDB");
+const vandium = require("vandium");
+const newStrip = require("webcomics-reader-webservices").handlePost;
+const provider = require("../providers/dynamoDB");
 
 exports.httpHandler = vandium.api()
     .protection()
@@ -26,17 +26,16 @@ exports.httpHandler = vandium.api()
     });
 
 async function handlePost(event) {
+    console.log("Event: ", event);
     try {
         let comicName = event.pathParameters.comicName;
         let strip = event.body;
-        let parsedStrip = newStrip(stirp, comicName);
-        console.log("Parsed Strip: ", parsedStrip);
-        let dbPostResult = await dbHelper.postNewStrip(parsedStrip);
-        console.log("DB Post Result: ", dbPostResult);
-        return "Done";
+        let result = await newStrip(comicName, strip, provider);
+        console.log("DB Post Result: ", result);
+        return { result: "Done" };
     } catch (error) {
         console.log("Event: ", event);
         console.log("Error: ", error);
-        return "Failed"
+        throw new Error("Failed");
     }
 };
