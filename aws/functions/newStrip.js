@@ -26,15 +26,12 @@ exports.httpHandler = vandium.api()
     });
 
 async function handlePost(event) {
-    console.log("Event: ", event);
     try {
         let comicName = event.pathParameters.comicName;
         let strip = event.body;
-        let result = await newStrip(comicName, strip, provider);
-        console.log("DB Post Result: ", result);
+        await newStrip(comicName, strip, provider);
         return { result: "Done" };
     } catch (error) {
-        console.log("Event: ", event);
         console.log("Error: ", error);
         throw new Error("Failed");
     }

@@ -9,14 +9,17 @@
   "author": "",
   "license": "",
   "dependencies": {
+    "aws-sdk": "^2.343.0",
     "vandium": "^4.8.0"
   },
   "jest": {
     "testURL": "http://localhost/"
   },
   "devDependencies": {
+    "aws-sdk-mock": "^4.2.0",
     "serverless-domain-manager": "^2.6.5",
     "serverless-jest-plugin": "^0.1.6",
-    "serverless-plugin-optimize": "^3.1.1-rc.1"
+    "serverless-plugin-optimize": "^3.1.1-rc.1",
+    "sinon": "^7.1.0"
   }
 }
