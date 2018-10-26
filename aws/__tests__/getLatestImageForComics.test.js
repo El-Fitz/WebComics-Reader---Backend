@@ -113,7 +113,7 @@ describe("Simple Successful GET Latest Images Test", () => {
 		AWS.mock("DynamoDB.DocumentClient", "query", stub)
 		process.env.REGION = "eu-west-1";
 		
-		const mod = require("../functions/getLastImageForComics");
+		const mod = require("../build/functions/getLastImageForComics");
 		const lambdaWrapper = require("serverless-jest-plugin").lambdaWrapper;
 		const wrapped = lambdaWrapper.wrap(mod, { handler: "httpHandler" });
 		try {

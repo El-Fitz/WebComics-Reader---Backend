@@ -42,3 +42,4 @@ core/lib
 # Linecout
 out
 _optimize
+aws/build

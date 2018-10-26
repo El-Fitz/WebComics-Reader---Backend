@@ -4,7 +4,10 @@
   "description": "A Webcomics Reader Backend for XKCD, QC & CommitStrip",
   "main": "functions/hanlder.js",
   "scripts": {
-    "test": "jest --coverage"
+    "postinstall": "cd ../core && npm link && cd ../aws && npm link webcomics-reader-webservices",
+    "build": "tsc -p ./",
+    "test": "npm run build && jest --coverage",
+    "deploy": "npm run build && sls deploy"
   },
   "author": "",
   "license": "",
@@ -16,10 +19,15 @@
     "testURL": "http://localhost/"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.14",
+    "@types/node": "^10.12.0",
     "aws-sdk-mock": "^4.2.0",
+    "serverless": "^1.32.0",
     "serverless-domain-manager": "^2.6.5",
     "serverless-jest-plugin": "^0.1.6",
     "serverless-plugin-optimize": "^3.1.1-rc.1",
-    "sinon": "^7.1.0"
+    "sinon": "^7.1.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.3"
   }
 }

@@ -1,0 +1,62 @@
+{
+	"defaultSeverity": "error",
+	"extends": [
+		"tslint:recommended"
+	],
+	"rules": {
+		"indent": [true, "tabs", 4],
+		"linebreak-style": [true, "LF"],
+		"quotemark": [true, "double"],
+		"semicolon": [true, "never"],
+		"trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
+		"only-arrow-functions": [true, "allow-declarations"],
+		"curly": [true, "ignore-same-line"],
+		"object-literal-shorthand": false,
+		"object-literal-sort-keys": false,
+		"no-conditional-assignment": true,
+		"no-consecutive-blank-lines": true,
+		"no-use-before-declare": true,
+		"strict-boolean-expressions": true,
+		"cyclomatic-complexity": true,
+		"max-file-line-count": [true, 300],
+		"max-line-length": [true, {"limit": 250, "ignore-pattern": "^import |^export {(.*?)}"}],
+		"no-require-imports": true,
+		"prefer-const": true,
+		"prefer-readonly": true,
+		"arrow-return-shorthand": true,
+		"no-trailing-whitespace": [true, "ignore-comments", "ignore-jsdoc", "ignore-template-strings"],
+		"no-unnecessary-callback-wrapper": true,
+		"return-undefined": true,
+		"whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-rest-spread", "check-type", "check-typecast", "check-type-operator", "check-preblock"],
+		"member-access": true,
+		"member-ordering": [true, {"order": "fields-first"}],
+		"no-any": true,
+		"no-unsafe-any": true,
+		"no-non-null-assertion": true,
+		"no-null-keyword": true,
+		"no-duplicate-super": true,
+		"no-duplicate-switch-case": true,
+		"no-duplicate-variable": true,
+		"no-dynamic-delete": true,
+		"no-eval": true,
+		"no-return-await": true,
+		"no-unused-expression": true,
+		"no-var-keyword": true,
+		"use-isnan": true,
+		"array-type": [true, "array"],
+		"no-misused-new": true,
+		"interface-name": false,
+		"max-classes-per-file": false,
+		"no-console": {
+			"severity": "warning",
+			"options": [
+				"debug",
+				"info",
+				"log",
+				"time",
+				"timeEnd",
+				"trace"
+			]
+		}
+	}
+}

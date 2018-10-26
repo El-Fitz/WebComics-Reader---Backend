@@ -101,7 +101,7 @@ describe("Simple Successful GET Strips Test", () => {
 		AWS.mock("DynamoDB.DocumentClient", "query", stub)
 		process.env.REGION = "eu-west-1";
 		
-		const mod = require("../functions/getStrips");
+		const mod = require("../build/functions/getStrips");
 		const lambdaWrapper = require("serverless-jest-plugin").lambdaWrapper;
 		const wrapped = lambdaWrapper.wrap(mod, { handler: "httpHandler" });
 		try {

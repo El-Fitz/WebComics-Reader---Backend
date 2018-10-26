@@ -45,19 +45,19 @@ plugins:
 
 functions:
   newStrip:
-    handler: functions/newStrip.httpHandler
+    handler: build/functions/newStrip.httpHandler
     events:
       - http:
           path: /{comicName}
           method: post
   getStrips:
-    handler: functions/getStrips.httpHandler
+    handler: build/functions/getStrips.httpHandler
     events:
       - http:
           path: /{comicName}
           method: get
   getLatestImageForComics:
-    handler: functions/getLastImageForComics.httpHandler
+    handler: build/functions/getLastImageForComics.httpHandler
     events:
       - http:
           path: latestImages

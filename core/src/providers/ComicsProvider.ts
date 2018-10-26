@@ -9,6 +9,6 @@ import { Comic } from "../models";
 
 export interface ComicsProvider {
 	getLatestStripFor(comicName: string): Promise<Comic>;
-	getStripsFor(comicName: string): Promise<[Comic]>;
+	getStripsFor(comicName: string): Promise<Comic[]>;
 	post(comic: Comic): Promise<void>;
 }

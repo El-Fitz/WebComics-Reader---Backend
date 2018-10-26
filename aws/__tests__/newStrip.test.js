@@ -100,7 +100,7 @@ describe("Simple Successful POST Test", () => {
 		AWS.mock("DynamoDB.DocumentClient", "put", stub)
 		process.env.REGION = "eu-west-1";
 		
-		const mod = require("../functions/newStrip");
+		const mod = require("../build/functions/newStrip");
 		const lambdaWrapper = require("serverless-jest-plugin").lambdaWrapper;
 		const wrapped = lambdaWrapper.wrap(mod, { handler: "httpHandler" });
 		try {
