@@ -13,6 +13,7 @@ exports.httpHandler = vandium.api()
     .GET( (event) => handleGet(event));
 
 async function handleGet(event) {
+    console.log("Event: ", event);
     try {
         let comics = await Promise.all(
             comicNames

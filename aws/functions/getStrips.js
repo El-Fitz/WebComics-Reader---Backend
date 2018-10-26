@@ -11,6 +11,7 @@ exports.httpHandler = vandium.api()
     .GET( (event) => handleGet(event));
 
 async function handleGet(event) {
+    console.log("Event: ", event);
     let comicName = event.pathParameters.comicName;
     let results = await provider.getStripsFor(comicName);
     console.log("Results: ", results);
