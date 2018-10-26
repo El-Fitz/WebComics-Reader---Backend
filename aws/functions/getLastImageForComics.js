@@ -4,7 +4,7 @@ const AWS = require("aws-sdk");
 const region = process.env.REGION;
 AWS.config.region = region;
 const vandium = require('vandium');
-const dbHelper = require("../helpers/dynamoDB");
+const provider = require("../providers/dynamoDB");
 
 const comicNames = ["XKCD", "QUESTIONNABLE_CONTENT"];
 
@@ -16,7 +16,7 @@ async function handleGet(event) {
     try {
         let comics = await Promise.all(
             comicNames
-                .map((comicName) => dbHelper.getLastImageForComic(comicName)
+                .map((comicName) => provider.getLatestStripFor(comicName)
                 .then((result) => result.Items[0])
                 .then((item) => { return { comicName: item.comicName, id: item.id, publishedDate: item.publishedDate, imgUrl: item.imgUrl } })
             )
