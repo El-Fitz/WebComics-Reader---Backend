@@ -1,0 +1,46 @@
+{
+  "name": "webcomics-reader-webservices",
+  "version": "1.0.0",
+  "description": "A Comics Reader's Webservices' Core Logic & Models",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc -p ./",
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "testURL": "http://localhost/",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/",
+      "/lib/"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "ts-jest"
+    },
+    "testRegex": "__tests__/.*\\.test\\.(ts|tsx|js)$"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Parsifal-SAS/WebComics-Reader-Backend.git"
+  },
+  "keywords": [
+    "webcomics"
+  ],
+  "author": "Thomas Léger",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Parsifal-SAS/WebComics-Reader-Backend/issues"
+  },
+  "homepage": "https://github.com/Parsifal-SAS/WebComics-Reader-Backend#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.5",
+    "@types/node": "^10.11.7",
+    "jest": "^23.6.0"
+  }
+}

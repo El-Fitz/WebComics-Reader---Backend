@@ -1,0 +1,140 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: WebComicsReader
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: eu-west-1
+  environment:
+    REGION: ${self:provider.region}
+    DYNAMODB_TABLE: ComicStrips
+  iamRoleStatements:
+    - Effect: Allow
+      Action: 
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/ComicStrips
+
+package:
+  excludeDevDependencies: true
+  individually: true
+
+plugins:
+  - serverless-plugin-optimize
+  - serverless-domain-manager
+  - serverless-pseudo-parameters
+
+functions:
+  newStrip:
+    handler: build/functions/newStrip.httpHandler
+    events:
+      - http:
+          path: /{comicName}
+          method: post
+  getStrips:
+    handler: build/functions/getStrips.httpHandler
+    events:
+      - http:
+          path: /{comicName}
+          method: get
+          # authorizer: aws_iam
+  getLatestImageForComics:
+    handler: build/functions/getLastImageForComics.httpHandler
+    events:
+      - http:
+          path: latestImages
+          method: get
+          # authorizer: aws_iam
+
+custom:
+  customDomain:
+    certificateName: 'comics.parsiweb.fr'
+    domainName: comics.parsiweb.fr
+    basePath: ${opt:stage, self:provider.stage}
+    stage: ${opt:stage, self:provider.stage}
+    createRoute53Record: true
+
+resources:
+  Resources:
+    WebComicsReaderCloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Comment: The WebComics Reader CloudFront Distribution
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - HEAD
+              - DELETE
+              - POST
+              - GET
+              - OPTIONS
+              - PUT
+              - PATCH
+            CachedMethods:
+              - HEAD
+              - GET
+            TargetOriginId: WebComicsReaderBackend-aws-origin
+            ViewerProtocolPolicy: 'redirect-to-https'
+            DefaultTTL: 1314000
+            Compress: true
+            ForwardedValues:
+              # Headers:
+                # - "*"
+                # - "Authorization"
+                # - "X-Amz-Security-Token"
+                # - "X-Amz-Date"
+              QueryString: true
+          Enabled: true
+          PriceClass: PriceClass_100
+          Origins:
+            - Id: WebComicsReaderBackend-aws-origin
+              DomainName:
+                Fn::Join:
+                  - "."
+                  - - Ref: ApiGatewayRestApi
+                    - execute-api.${self:provider.region}.amazonaws.com
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: https-only
+# you can add CloudFormation resource templates here
+# resources:
+#   Resources:
+#     ComicsStripsDynamoDbTable:
+#       Type: 'AWS::DynamoDB::Table'
+#       DeletionPolicy: Retain
+#       Properties:
+#         AttributeDefinitions:
+#           - AttributeName: comicName
+#             AttributeType: S
+#           - AttributeName: id
+#             AttributeType: S
+#         KeySchema:
+#           - AttributeName: comicName
+#             KeyType: HASH
+#           - AttributeName: id
+#             KeyType: RANGE
+#         ProvisionedThroughput:
+#           ReadCapacityUnits: 1
+#           WriteCapacityUnits: 1
+#         TableName: ${self:provider.environment.DYNAMODB_TABLE}
