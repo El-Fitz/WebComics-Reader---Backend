@@ -33,7 +33,7 @@ provider:
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
-      Resource: arn:aws:dynamodb:${self:provider.region}:430891671017:table/ComicStrips
+      Resource: arn:aws:dynamodb:${self:provider.region}:#{AWS::AccountId}:table/ComicStrips
 
 package:
   excludeDevDependencies: true
@@ -42,6 +42,7 @@ package:
 plugins:
   - serverless-plugin-optimize
   - serverless-domain-manager
+  - serverless-pseudo-parameters
 
 functions:
   newStrip:
@@ -56,21 +57,66 @@ functions:
       - http:
           path: /{comicName}
           method: get
+          # authorizer: aws_iam
   getLatestImageForComics:
     handler: build/functions/getLastImageForComics.httpHandler
     events:
       - http:
           path: latestImages
           method: get
+          # authorizer: aws_iam
 
 custom:
   customDomain:
     certificateName: 'comics.parsiweb.fr'
     domainName: comics.parsiweb.fr
-    basePath: ${self:provider.stage}
-    stage: ${self:provider.stage}
+    basePath: ${opt:stage, self:provider.stage}
+    stage: ${opt:stage, self:provider.stage}
     createRoute53Record: true
 
+resources:
+  Resources:
+    WebComicsReaderCloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Comment: The WebComics Reader CloudFront Distribution
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - HEAD
+              - DELETE
+              - POST
+              - GET
+              - OPTIONS
+              - PUT
+              - PATCH
+            CachedMethods:
+              - HEAD
+              - GET
+            TargetOriginId: WebComicsReaderBackend-aws-origin
+            ViewerProtocolPolicy: 'redirect-to-https'
+            DefaultTTL: 1314000
+            Compress: true
+            ForwardedValues:
+              # Headers:
+                # - "*"
+                # - "Authorization"
+                # - "X-Amz-Security-Token"
+                # - "X-Amz-Date"
+              QueryString: true
+          Enabled: true
+          PriceClass: PriceClass_100
+          Origins:
+            - Id: WebComicsReaderBackend-aws-origin
+              DomainName:
+                Fn::Join:
+                  - "."
+                  - - Ref: ApiGatewayRestApi
+                    - execute-api.${self:provider.region}.amazonaws.com
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: https-only
 # you can add CloudFormation resource templates here
 # resources:
 #   Resources:

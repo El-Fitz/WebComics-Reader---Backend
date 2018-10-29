@@ -5,8 +5,6 @@
  * @Last Modified time: 2018-10-12 13:45:35
  */
 
-// import { Comic } from "../../models/Comic";
-
 export class Comic {
 	comicName: string;
 	id: string;

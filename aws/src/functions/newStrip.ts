@@ -1,3 +1,10 @@
+/*
+ * @Author: Thomas Léger 
+ * @Date: 2018-10-29 19:12:23 
+ * @Last Modified by: Thomas Léger
+ * @Last Modified time: 2018-10-29 19:15:18
+ */
+
 "use strict"
 
 // tslint:disable-next-line: no-require-imports no-var-requires
@@ -9,23 +16,14 @@ const provider = new Provider()
 
 // tslint:disable: no-unsafe-any
 exports.httpHandler = vandium.api()
-	.protection()
-	.POST({
-			body: {
-				title: vandium.types.string().required(),
-				url: vandium.types.string().required(),
-				content: vandium.types.string().required(),
-				image: vandium.types.string().min(20).required(),
-				published: vandium.types.string().required(),
-			},
-		},
-		handlePost,
-	)
+.protection()
+.POST(handlePost)
+
 // tslint:enable: no-unsafe-any
-	.onError( (err: Error) => {
-		console.log("Error: " + err)
-		return err
-	})
+.onError( (err: Error) => {
+	console.log("Error: " + err)
+	return err
+})
 
 async function handlePost(event: APIGatewayEvent) {
 	if (event.pathParameters === null || event.pathParameters === undefined) throw new Error("Invalid Parameters")

@@ -15,5 +15,14 @@ async function handleGet(event: APIGatewayEvent) {
 	if (event.pathParameters === null || event.pathParameters === undefined) throw new Error("Invalid Parameters")
 	const comicName = event.pathParameters.comicName
 	const results = await provider.getStripsFor(comicName)
-	return results.reverse()
+	const expirationDate = new Date();
+	expirationDate.setDate(expirationDate.getDate() + 7);
+	return {
+		isBase64Encoded: false, // Set to `true` for binary support.
+		statusCode: 200,
+		headers: {
+			"Cache-Control": "max-age=86400, public",
+		},
+		body: results.reverse(),
+	}
 }
