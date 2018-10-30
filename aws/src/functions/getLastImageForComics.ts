@@ -1,16 +1,11 @@
 /*
  * @Author: Thomas Léger 
  * @Date: 2018-10-30 10:52:02 
- * @Last Modified by:   Thomas Léger 
- * @Last Modified time: 2018-10-30 10:52:02 
+ * @Last Modified by: Thomas Léger
+ * @Last Modified time: 2018-10-30 11:22:18
  */
 
 "use strict"
-// tslint:disable-next-line: no-require-imports no-var-requires
-require("honeycomb-beeline")({
-	writeKey: "6b6077b2b06c946f9792f655444b5d65",
-	dataset: "webcomics-backend",
-})
 // tslint:disable-next-line: no-require-imports no-var-requires
 const vandium = require("vandium")
 import { Provider } from "../providers/dynamoDB"

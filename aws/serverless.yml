@@ -41,7 +41,7 @@ package:
 
 plugins:
   - serverless-plugin-optimize
-  - serverless-domain-manager
+  # - serverless-domain-manager
   - serverless-pseudo-parameters
 
 functions:
@@ -49,30 +49,30 @@ functions:
     handler: build/functions/newStrip.httpHandler
     events:
       - http:
-          path: /{comicName}
+          path: /comics/{comicName}
           method: post
   getStrips:
     handler: build/functions/getStrips.httpHandler
     events:
       - http:
-          path: /{comicName}
+          path: /comics/{comicName}
           method: get
           # authorizer: aws_iam
   getLatestImageForComics:
     handler: build/functions/getLastImageForComics.httpHandler
     events:
       - http:
-          path: latestImages
+          path: /latest
           method: get
           # authorizer: aws_iam
 
-custom:
-  customDomain:
-    certificateName: 'comics.parsiweb.fr'
-    domainName: comics.parsiweb.fr
-    basePath: ${opt:stage, self:provider.stage}
-    stage: ${opt:stage, self:provider.stage}
-    createRoute53Record: true
+# custom:
+#   customDomain:
+#     certificateName: 'comics.parsiweb.fr'
+#     domainName: comics.parsiweb.fr
+#     basePath: ${opt:stage, self:provider.stage}
+#     stage: ${opt:stage, self:provider.stage}
+#     createRoute53Record: true
 
 resources:
   Resources:
@@ -81,6 +81,8 @@ resources:
       Properties:
         DistributionConfig:
           Comment: The WebComics Reader CloudFront Distribution
+          Aliases:
+            - comics.parsiweb.fr
           DefaultCacheBehavior:
             AllowedMethods:
               - HEAD

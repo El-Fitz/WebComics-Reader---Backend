@@ -13,7 +13,6 @@
   "license": "",
   "dependencies": {
     "aws-sdk": "^2.343.0",
-    "honeycomb-beeline": "^1.2.0",
     "vandium": "^4.8.0"
   },
   "jest": {
