@@ -2,10 +2,16 @@
  * @Author: Thomas Léger 
  * @Date: 2018-10-29 19:12:23 
  * @Last Modified by: Thomas Léger
- * @Last Modified time: 2018-10-29 19:15:18
+ * @Last Modified time: 2018-10-30 10:51:33
  */
 
 "use strict"
+
+// tslint:disable-next-line: no-require-imports no-var-requires
+require("honeycomb-beeline")({
+	writeKey: "6b6077b2b06c946f9792f655444b5d65",
+	dataset: "webcomics-backend",
+})
 
 // tslint:disable-next-line: no-require-imports no-var-requires
 const vandium = require("vandium")
